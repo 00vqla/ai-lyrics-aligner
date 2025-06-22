@@ -1,0 +1,36 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, 3.10, 3.11]
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Test import
+      run: |
+        python -c "import lyrics_aligner; print('Import successful')"
+    
+    - name: Test help
+      run: |
+        python lyrics_aligner.py --help
+    
+    - name: Check code style
+      run: |
+        pip install flake8
+        flake8 lyrics_aligner.py run_aligner.py --max-line-length=120 --ignore=E501,W503 
