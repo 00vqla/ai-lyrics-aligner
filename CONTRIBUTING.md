@@ -6,7 +6,7 @@ Thank you for your interest in contributing to AI Lyrics Aligner! This document 
 
 ### Reporting Bugs
 
-1. Check if the bug has already been reported in the [Issues](https://github.com/yourusername/ai-lyrics-aligner/issues) section
+1. Check if the bug has already been reported in the [Issues](https://github.com/00vqla/ai-lyrics-aligner/issues) section
 2. If not, create a new issue with:
    - A clear and descriptive title
    - Steps to reproduce the bug
@@ -39,7 +39,7 @@ Thank you for your interest in contributing to AI Lyrics Aligner! This document 
 
 1. Clone your fork:
    ```bash
-   git clone https://github.com/yourusername/ai-lyrics-aligner.git
+   git clone https://github.com/00vqla/ai-lyrics-aligner.git
    cd ai-lyrics-aligner
    ```
 

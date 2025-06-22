@@ -24,7 +24,7 @@ setup(
     description="AI-powered tool to align and timestamp lyrics in MP3 files",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/ai-lyrics-aligner",
+    url="https://github.com/00vqla/ai-lyrics-aligner",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -50,8 +50,8 @@ setup(
     },
     keywords="lyrics, audio, mp3, alignment, timestamp, ai, whisper, music",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/ai-lyrics-aligner/issues",
-        "Source": "https://github.com/yourusername/ai-lyrics-aligner",
-        "Documentation": "https://github.com/yourusername/ai-lyrics-aligner#readme",
+        "Bug Reports": "https://github.com/00vqla/ai-lyrics-aligner/issues",
+        "Source": "https://github.com/00vqla/ai-lyrics-aligner",
+        "Documentation": "https://github.com/00vqla/ai-lyrics-aligner#readme",
     },
 ) 
