@@ -132,7 +132,7 @@ Found 1 MP3 file(s):
 1. 79 wtf.mp3
 
 ==================================================
-Processing: 79 wtf.mp3
+Processing: sample_song.mp3
 ==================================================
 
 1. Extracting embedded lyrics...
@@ -147,15 +147,15 @@ Loading Whisper model: base
 Transcribing audio with Whisper...
 Found 613 words with timestamps
 Using AI-powered alignment...
-AI Aligned: 'Uh break down all this weed' (123.30s - 125.44s)
+AI Aligned: 'Uh break down all this ****' (123.30s - 125.44s)
 AI Aligned: 'Yeah then roll it up' (70.56s - 72.22s)
 ...
 
 4. Formatting timestamped lyrics...
 5. Embedding timestamped lyrics...
-Improved timestamped lyrics embedded successfully: 79 wtf_improved.mp3
+Improved timestamped lyrics embedded successfully: 79 sample_song_improved.mp3
 
-✅ Success! Improved lyrics embedded in: 79 wtf_improved.mp3
+✅ Success! Improved lyrics embedded in: 79 sample_song_improved.mp3
 ```
 
 ## Troubleshooting
