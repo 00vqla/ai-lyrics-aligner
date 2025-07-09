@@ -79,7 +79,7 @@ Your MP3 files must have lyrics embedded in one of these ID3 tags:
 - `TXXX::SYNCEDLYRICS`
 
 **Need to embed lyrics?**
-If you have trouble finding lyrics for your MP3 files, try using my other project, [Metadata Fetcher](https://github.com/00vqla/metadata-fetcher).
+If you have trouble finding lyrics for your MP3 files, try using my other project, [py-genius-tag](https://github.com/00vqla/py-genius-tag).
 
 ## Example Output
 
