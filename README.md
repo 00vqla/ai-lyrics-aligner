@@ -1,4 +1,4 @@
-# AI Lyrics Aligner
+# py-lyric-sync
 
 A python tool to alligns lyrics to audio using OpenAI's Whisper model
 
