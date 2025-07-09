@@ -123,7 +123,3 @@ Improved timestamped lyrics embedded successfully: 79 sample_song_improved.mp3
 ### Poor alignment accuracy
 - Try using a larger Whisper model (`-m small` or `-m medium`)
 - Ensure the audio quality is good
-
-## License
-
-This project is open source and available under the MIT License. 
