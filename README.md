@@ -2,26 +2,20 @@
 
 A python tool to alligns lyrics to audio using OpenAI's Whisper model
 
-## Quick Start
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the aligner
-python3 run_aligner.py
-```
-
-This will process all MP3 files in the current directory and create timestamped versions.
-
 ## Requirements
 
 - Python 3.7+
 - OpenAI Whisper model
 
+## Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Usage
 
-### Method 1: Process All Files (Recommended)
+### Method 1: Process All Files
 
 Place your MP3 files with embedded lyrics in the same directory and run:
 
@@ -100,18 +94,17 @@ Split into 72 lines
 
 3. Smart aligning lyrics with audio...
 Loading Whisper model: base
-Transcribing audio with Whisper...
+Transcribing audio...
 Found 613 words with timestamps
-Using AI-powered alignment...
-AI Aligned: 'Uh break down all this ****' (123.30s - 125.44s)
-AI Aligned: 'Yeah then roll it up' (70.56s - 72.22s)
+Aligned: 'Uh break down all this ****' (123.30s - 125.44s)
+Aligned: 'Yeah then roll it up' (70.56s - 72.22s)
 ...
 
 4. Formatting timestamped lyrics...
 5. Embedding timestamped lyrics...
-Improved timestamped lyrics embedded successfully: 79 sample_song_improved.mp3
+Timestamped lyrics embedded successfully: 79 sample_song_improved.mp3
 
-✅ Success! Improved lyrics embedded in: 79 sample_song_improved.mp3
+✅ Success! Lyrics embedded in: 79 sample_song_improved.mp3
 ```
 
 ## Troubleshooting

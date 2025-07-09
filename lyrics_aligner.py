@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-Improved AI Lyrics Aligner - Better accuracy with smarter timing
-"""
-
 import os
 import sys
 import json
@@ -28,32 +23,25 @@ except ImportError as e:
 
 class ImprovedLyricsAligner:
     def __init__(self, model_name: str = "base"):
-        """
-        Initialize the improved lyrics aligner
-        """
         self.model_name = model_name
         self.whisper_model = None
         
     def load_whisper_model(self):
-        """Load Whisper model for speech recognition"""
         if self.whisper_model is None:
             print(f"Loading Whisper model: {self.model_name}")
             self.whisper_model = whisper.load_model(self.model_name)
         return self.whisper_model
     
     def extract_embedded_lyrics(self, audio_path: str) -> Optional[str]:
-        """
-        Extract embedded lyrics from MP3 file using ID3 tags
-        """
         try:
             audio = MP3(audio_path, ID3=ID3)
             if audio.tags is None:
                 print("No ID3 tags found in the audio file")
                 return None
             
-            # Try different lyric tags
+            # other possible tags
             lyric_tags = [
-                'USLT::eng',  # Unsynchronized lyrics
+                'USLT::eng',  # unsynched
                 'TXXX::LYRICS',
                 'TXXX::UNSYNCEDLYRICS',
                 'TXXX::SYNCEDLYRICS'
@@ -66,7 +54,7 @@ class ImprovedLyricsAligner:
                         print(f"Found lyrics in tag: {tag}")
                         return lyrics
             
-            # Try to find any USLT tag
+            # find USLT tags
             for tag in audio.tags:
                 if tag.startswith('USLT'):
                     lyrics = str(audio.tags[tag])
@@ -85,16 +73,15 @@ class ImprovedLyricsAligner:
         """
         Clean and split lyrics into lines, preserving more structure
         """
-        # Remove common metadata but keep more content
-        lyrics = re.sub(r'\[.*?\]', '', lyrics)  # Remove brackets
-        lyrics = re.sub(r'\(.*?\)', '', lyrics)  # Remove parentheses
+        # regex filtering
+        lyrics = re.sub(r'\[.*?\]', '', lyrics)  # brackets
+        lyrics = re.sub(r'\(.*?\)', '', lyrics)  # parentheses
         
-        # Split into lines and clean
+        # split into lines
         lines = []
         for line in lyrics.split('\n'):
             line = line.strip()
             if line:
-                # Keep more punctuation and structure
                 lines.append(line)
         
         return lines
@@ -110,7 +97,7 @@ class ImprovedLyricsAligner:
             return duration
         except Exception as e:
             print(f"Error getting audio duration: {e}")
-            return 180.0  # Default 3 minutes
+            return 180.0 
     
     def transcribe_audio(self, audio_path: str) -> List[Dict]:
         """
@@ -122,7 +109,7 @@ class ImprovedLyricsAligner:
         try:
             result = model.transcribe(audio_path, word_timestamps=True)
             
-            # Get word-level timestamps
+            # word level timestamps
             word_timestamps = []
             for segment in result["segments"]:
                 if isinstance(segment, dict) and "words" in segment:
@@ -157,8 +144,8 @@ class ImprovedLyricsAligner:
         if num_lines == 0:
             return []
         
-        # If we have good transcription data, use it
-        if len(word_timestamps) > 50:  # Minimum threshold for reliable transcription
+        # use if good transcription
+        if len(word_timestamps) > 50:  # min threshold for reliable transcription
             return self.ai_align_lyrics(content_lines, word_timestamps, duration)
         else:
             return self.duration_align_lyrics(content_lines, duration)
@@ -175,14 +162,14 @@ class ImprovedLyricsAligner:
             if not line_words:
                 continue
             
-            # Find the best match for this line
+            # best for match for line
             best_match = self.find_best_line_match(line_words, word_timestamps)
             
             if best_match:
                 aligned_lyrics.append(best_match)
                 print(f"AI Aligned: '{line}' ({best_match['start_time']:.2f}s - {best_match['end_time']:.2f}s)")
             else:
-                # Fallback to duration-based timing
+                # fallback to duration-based
                 estimated = self.estimate_line_timing(len(aligned_lyrics), line, duration, len(lyrics))
                 aligned_lyrics.append(estimated)
                 print(f"Estimated: '{line}' ({estimated['start_time']:.2f}s - {estimated['end_time']:.2f}s)")
@@ -190,9 +177,7 @@ class ImprovedLyricsAligner:
         return aligned_lyrics
     
     def find_best_line_match(self, line_words: List[str], word_timestamps: List[Dict]) -> Optional[Dict]:
-        """
-        Find the best match for a line in the transcribed words
-        """
+
         if len(line_words) < 2:
             return None
         
@@ -200,7 +185,7 @@ class ImprovedLyricsAligner:
         best_start = None
         best_end = None
         
-        # Look for consecutive word matches
+        # consec word matches
         for i in range(len(word_timestamps) - len(line_words) + 1):
             score = 0
             consecutive_matches = 0
@@ -242,19 +227,19 @@ class ImprovedLyricsAligner:
         """
         Check if two words are similar (for flexible matching)
         """
-        # Remove common suffixes/prefixes
+        # filtering
         word1_clean = re.sub(r'[^\w]', '', word1.lower())
         word2_clean = re.sub(r'[^\w]', '', word2.lower())
         
-        # Exact match
+        # match
         if word1_clean == word2_clean:
             return True
         
-        # One word contains the other
+        # one + other
         if word1_clean in word2_clean or word2_clean in word1_clean:
             return True
         
-        # Similar length and common characters
+        # similar length + common chars
         if len(word1_clean) > 3 and len(word2_clean) > 3:
             common_chars = sum(1 for c in word1_clean if c in word2_clean)
             if common_chars >= min(len(word1_clean), len(word2_clean)) * 0.7:
@@ -270,18 +255,18 @@ class ImprovedLyricsAligner:
         aligned_lyrics = []
         num_lines = len(lyrics)
         
-        # Calculate base timing
+        # base timing calculation
         base_time_per_line = duration / num_lines
         
         for i, line in enumerate(lyrics):
-            # Add variation based on line length
+            # var based on line length
             line_length = len(line.split())
             time_variation = min(1.0, line_length * 0.2)
             
             start_time = i * base_time_per_line
             end_time = start_time + base_time_per_line + time_variation
             
-            # Ensure we don't exceed duration
+            # duration check
             if end_time > duration:
                 end_time = duration
             
@@ -329,7 +314,7 @@ class ImprovedLyricsAligner:
             line = entry["line"]
             confidence = entry["confidence"]
             
-            # Format timestamp as [MM:SS.mmm]
+            # format timestamp
             start_timestamp = f"[{int(start_time//60):02d}:{start_time%60:06.3f}]"
             
             formatted_line = f"{start_timestamp} {line}"
@@ -345,26 +330,25 @@ class ImprovedLyricsAligner:
             output_path = audio_path.replace('.mp3', '_improved.mp3')
         
         try:
-            # Copy the original file
+            # clone og file
             import shutil
             shutil.copy2(audio_path, output_path)
             
-            # Load the copied file and add lyrics
+            # load the clone
             audio = MP3(output_path, ID3=ID3)
             
-            # Create ID3 tag if it doesn't exist
+            # create ID3 tag if not available
             if audio.tags is None:
                 audio.tags = ID3()
             
-            # Add timestamped lyrics as USLT (Unsynchronized Lyrics)
+            # add timestamped lyrics as USLT
             uslt = USLT(encoding=3, lang='eng', desc='Improved AI Aligned Lyrics', text=timestamped_lyrics)
             audio.tags.add(uslt)
             
-            # Also add as TXXX tag for compatibility
+            # TXXX
             txxx = TXXX(encoding=3, desc='IMPROVED_TIMESTAMPED_LYRICS', text=timestamped_lyrics)
             audio.tags.add(txxx)
             
-            # Save the file
             audio.save()
             
             print(f"Improved timestamped lyrics embedded successfully: {output_path}")
@@ -375,12 +359,9 @@ class ImprovedLyricsAligner:
             return None
     
     def process_audio_file(self, audio_path: str, output_path: str = None) -> bool:
-        """
-        Complete workflow: extract, smart align, and embed lyrics
-        """
         print(f"Processing: {audio_path}")
         
-        # Step 1: Extract embedded lyrics
+        # extract
         print("\n1. Extracting embedded lyrics...")
         lyrics = self.extract_embedded_lyrics(audio_path)
         if not lyrics:
@@ -389,25 +370,25 @@ class ImprovedLyricsAligner:
         
         print(f"Extracted lyrics:\n{lyrics[:200]}...")
         
-        # Step 2: Clean and split lyrics
+        # clean n split
         print("\n2. Cleaning and splitting lyrics...")
         lyrics_lines = self.clean_lyrics(lyrics)
         print(f"Split into {len(lyrics_lines)} lines")
         
-        # Step 3: Smart align lyrics with audio
-        print("\n3. Smart aligning lyrics with audio...")
+        # aligning
+        print("\n3. Aligning lyrics with audio...")
         aligned_lyrics = self.smart_align_lyrics(audio_path, lyrics_lines)
         
-        # Step 4: Format timestamped lyrics
+        # formatting
         print("\n4. Formatting timestamped lyrics...")
         timestamped_lyrics = self.format_timestamped_lyrics(aligned_lyrics)
         
-        # Step 5: Embed timestamped lyrics
+        # embedding
         print("\n5. Embedding timestamped lyrics...")
         result_path = self.embed_timestamped_lyrics(audio_path, timestamped_lyrics, output_path)
         
         if result_path:
-            print(f"\n✅ Success! Improved lyrics embedded in: {result_path}")
+            print(f"\n✅ Success! Lyrics embedded in: {result_path}")
             print("\nTimestamped lyrics preview:")
             print(timestamped_lyrics[:500] + "..." if len(timestamped_lyrics) > 500 else timestamped_lyrics)
             return True
@@ -430,10 +411,9 @@ def main():
         print(f"Error: File not found: {args.audio_file}")
         sys.exit(1)
     
-    # Initialize aligner
+    # init
     aligner = ImprovedLyricsAligner(model_name=args.model)
-    
-    # Process the file
+
     success = aligner.process_audio_file(args.audio_file, args.output)
     
     if success:

@@ -1,14 +1,9 @@
-#!/usr/bin/env python3
-"""
-Simple script to run the improved lyrics aligner on MP3 files in the current directory
-"""
-
 import os
 import glob
 from lyrics_aligner import ImprovedLyricsAligner
 
 def main():
-    # Find all MP3 files in the current directory (excluding already processed ones)
+    # look for all mp3s in folder + skip already processed
     mp3_files = [f for f in glob.glob("*.mp3") if not f.endswith(('_aligned.mp3', '_improved.mp3'))]
     
     if not mp3_files:
@@ -20,7 +15,6 @@ def main():
     for i, file in enumerate(mp3_files, 1):
         print(f"{i}. {file}")
     
-    # Process each MP3 file
     aligner = ImprovedLyricsAligner(model_name="base")
     
     for mp3_file in mp3_files:
